@@ -1,17 +1,12 @@
 import React from 'react'
 
 interface HeadingProps {
-    heading: string;
+    heading?: string | null;
 }
-const Heading: React.FC<HeadingProps> = (props) => {
-    let {
-        heading
-    } = props;
+export default ({heading}: HeadingProps) => {
     return (
         <div className="bg-gray-600">
-            {heading}
+            {heading || "Heading"}
         </div>
     );
 }
-
-export default Heading;
