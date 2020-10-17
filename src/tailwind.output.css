@@ -22784,9 +22784,17 @@ video {
           animation: bounce 1s infinite;
 }
 
-/* .button-color-orange{
-   background-color: #f14536;
-} */
+.button-color-orange{
+  background-color: #f14536;
+}
+
+.border-color-orange{
+  border: 1px solid #f14536;
+}
+
+.text-color-orange{
+  color: #f14536;
+}
 
 @media (min-width: 640px) {
   .sm\:container {

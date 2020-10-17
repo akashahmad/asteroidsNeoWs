@@ -9,45 +9,47 @@ import FormCheckBox from '../../molecules/formCheckBox/formCheckBox'
 import Button from '../../atoms/button/button'
 
 export default () => {
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("e", e.target.value)
+    const onChange = (value:string | number) => {
+        
     }
 
     return (
         <FormBox>
-            <Space />
-            <div className="flex justify-center ">
-                <Heading heading={"Wellcome Back!"} />
-            </div>
-            <Space />
-            <FormRow>
-                <FormCol>
-                    <FormInput placeholder={"johndoe"} type={"text"} onChange={onChange} label={"Username"} />
-                </FormCol>
+            <form>
+                <Space />
+                <div className="flex justify-center ">
+                    <Heading heading={"Wellcome Back!"} />
+                </div>
+                <Space />
+                <FormRow>
+                    <FormCol>
+                        <FormInput placeholder={"johndoe"} type={"text"} onChange={onChange} label={"Username"} />
+                    </FormCol>
 
-            </FormRow>
-            <FormRow>
-                <FormCol>
-                    <FormInput placeholder={"******"} type={"password"} onChange={onChange} label={"Password"} />
-                </FormCol>
-            </FormRow>
+                </FormRow>
+                <FormRow>
+                    <FormCol>
+                        <FormInput placeholder={"******"} type={"password"} onChange={onChange} label={"Password"} />
+                    </FormCol>
+                </FormRow>
 
-            <FormRow>
-                <FormCol>
-                    <FormCheckBox type={"checkbox"} onChange={onChange} label={"Remember Me"} />
-                </FormCol>
-            </FormRow>
+                <FormRow>
+                    <FormCol>
+                        <FormCheckBox type={"checkbox"} onChange={onChange} label={"Remember Me"} />
+                    </FormCol>
+                </FormRow>
 
-            <Space />
-            <FormRow>
-                <Button buttonText={"Login"} />
-            </FormRow>
+                <Space />
+                <FormRow>
+                    <Button buttonText={"Login"} />
+                </FormRow>
 
-            <Space />
-            <FormRow>
-                <p className="text-color-orange cursor-pointer font-sans text-base font-semibold not-italic text-center">Forgot Password?</p>
-            </FormRow>
-            <Space />
+                <Space />
+                <FormRow>
+                    <p className="text-color-orange cursor-pointer font-sans text-base font-semibold not-italic text-center">Forgot Password?</p>
+                </FormRow>
+                <Space />
+            </form>
         </FormBox>
     );
 }

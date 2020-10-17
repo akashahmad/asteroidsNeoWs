@@ -1,6 +1,6 @@
 import React from 'react'
 interface FormBoxProps{
-    children:any  
+    children:React.ReactNode;
 }
 
 export default ({children}:FormBoxProps) => {
