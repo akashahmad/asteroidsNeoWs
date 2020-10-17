@@ -3,9 +3,9 @@ import React from 'react'
 interface HeadingProps {
     heading?: string | null;
 }
-export default ({heading}: HeadingProps) => {
+export default ({ heading }: HeadingProps) => {
     return (
-        <div className="bg-gray-600">
+        <div className="font-sans text-2xl font-semibold not-italic text-center text-current" >
             {heading || "Heading"}
         </div>
     );

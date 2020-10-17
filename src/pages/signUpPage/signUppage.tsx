@@ -27,7 +27,7 @@ const SignUpPage = () => {
     // }, []);
     return (
         <div >
-            <SignUpTemplate />
+          <SignUpTemplate />
         </div>
     );
 }

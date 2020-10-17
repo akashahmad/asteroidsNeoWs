@@ -22784,6 +22784,10 @@ video {
           animation: bounce 1s infinite;
 }
 
+.button-color-orange{
+  background-color: #f14536;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;
