@@ -1,0 +1,20 @@
+.bg_heart_image{
+    background-image: url("../images/heart-shape-outline@2x.png");
+    background-size: contain;
+    height: 20px;
+    width: 22px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.react-date-picker__wrapper {
+    border-radius: 4px!important;
+    border: thin solid #e2e8f0!important;
+    background: white!important;
+    padding: 10px;
+}
+.react-date-picker.react-date-picker--closed.react-date-picker--enabled{
+    padding: 0px!important;
+}
+.react-date-picker.react-date-picker--open.react-date-picker--enabled{
+    padding: 0px!important;
+}

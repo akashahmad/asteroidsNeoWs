@@ -27,7 +27,6 @@ const SignUpTemplate = () => {
                     <FormInput placeholder={"johndoe@gmail.com"} type={"email"} onChange={onChange} label={"Email"} />
                 </FormCol>
             </FormRow>
-
             <FormRow>
                 <FormCol>
                     <FormInput placeholder={"johndoe"} type={"text"} onChange={onChange} label={"Username"} />
