@@ -2,6 +2,7 @@ import React from 'react'
 import ListHeading from '../../atoms/listHeading/listHeading'
 import FiltersInput from '../../molecules/listFilterInputs/listFilterInputs'
 
+
 interface ListFilterInputs {
     placeholder: string;
     type: string;

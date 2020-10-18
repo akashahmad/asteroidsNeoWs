@@ -15,7 +15,7 @@ export default () => {
                 {/* Nearest Asteroids */}
                 <div className="py-4">
                     <div>
-                        <FilterRow placeholder={"Search By Id"} type={"number"} mainHeading={"Nearest Asteroids"} />
+                        <FilterRow placeholder={"1234"} type={"number"} mainHeading={"Nearest Asteroids"} />
                     </div>
                     <div className="py-5">
                         <TableHeader />
