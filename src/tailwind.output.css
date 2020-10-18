@@ -22788,6 +22788,14 @@ video {
   background-color: #f14536;
 }
 
+.border-color-orange{
+  border: 1px solid #f14536;
+}
+
+.text-color-orange{
+  color: #f14536;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;

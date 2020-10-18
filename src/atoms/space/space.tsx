@@ -2,7 +2,7 @@ import React from 'react'
 
 export default () => {
     return (
-        <div className="mt-12">
+        <div className="pt-12">
         </div>
     );
 }
