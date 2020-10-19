@@ -2,11 +2,12 @@ import React, {useEffect, useContext} from 'react';
 import {Route, Switch, withRouter} from 'react-router-dom';
 import {GlobalContext} from './context/GlobalState';
 import ListOfAsteroids from './pages/asteroidsList/asteroidsList'
+import Loader from './organisms/loader'
 import firebase from "./config/firebase";
 
 const Routes = (props: any) => {
     let {history, location} = props;
-    const {setLoader, setUser, setId, setLoggedIn}:any = useContext(GlobalContext);
+    const {setLoader, setUser, setId, setLoggedIn, loggedIn}:any = useContext(GlobalContext);
     useEffect(() => {
         setLoader(true);
         firebase.auth().onAuthStateChanged((user) => {
@@ -33,7 +34,7 @@ const Routes = (props: any) => {
     }, [location.pathname]);
     return (
         <Switch>
-            <Route path="/" exact component={ ListOfAsteroids }/>
+            <Route path="/" exact component={ loggedIn ? ListOfAsteroids : Loader }/>
         </Switch>
     )
 }
