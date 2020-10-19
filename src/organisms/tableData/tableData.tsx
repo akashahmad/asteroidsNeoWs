@@ -10,15 +10,16 @@ interface TableRecord {
     Min_Max_Est_Diamater?: string;
     Relative_Velocity?: string;
     Hazard?: any;
-    favouriteHandler?: any
-    isFavourite: boolean,
+    favouriteHandler?: any;
+    isFavourite: boolean;
+    getAsteroidRecord: any;
 }
-export default ({ID, Name, Date, Time, Ab_Magnitutde, Min_Max_Est_Diamater, Hazard, Relative_Velocity, favouriteHandler, isFavourite}: TableRecord) => {
+export default ({ID, Name, Date, Time, Ab_Magnitutde, Min_Max_Est_Diamater, Hazard, Relative_Velocity, favouriteHandler, isFavourite, getAsteroidRecord}: TableRecord) => {
     return (
         <div>
             {/* table heading section */}
             <div className="py-1">    
-                <ul className="flex bg-white rounded shadow-sm border-gray-400 border py-3 cursor-pointer hover:bg-gray-300">
+                <ul className="flex bg-white rounded shadow-sm border-gray-400 border py-3 cursor-pointer hover:bg-gray-300 " onClick={()=>getAsteroidRecord(ID)}>
                     {ID && <li className="w-1/12 px-3"><TableData tableData={ID}/></li>}
                     {Name && <li className="w-1/12 px-1"><TableData tableData={Name}/></li>}
                     {Date && <li className="w-1/12 px-1"><TableData tableData={Date}/></li>}
@@ -28,8 +29,8 @@ export default ({ID, Name, Date, Time, Ab_Magnitutde, Min_Max_Est_Diamater, Haza
                     <li className="w-2/12 px-2"><TableData tableData={Min_Max_Est_Diamater}/></li>}
                     {Relative_Velocity && <li className="w-2/12 px-3"><TableData tableData={Relative_Velocity}/></li>}
                     {Hazard && <li className="w-1/12 px-1 flex justify-center">{Hazard === "true" ? <span className="bg_tick_image"/> : <span className="bg_Cross_image"/>}</li>}
-                    <li className="w-2/12 px-1 flex justify-center cursor-pointer" onClick={() => favouriteHandler(ID, Name)}>
-                        {isFavourite ? <span className="bg_heart_black_image"/> : <span className="bg_heart_image"/>}
+                    <li className="w-2/12 px-1 flex justify-center cursor-pointer relative z-0">
+                        {isFavourite ? <span className="bg_heart_black_image relative z-100" onClick={() => favouriteHandler(ID, Name)}/> : <span className="bg_heart_image relative z-100" onClick={() => favouriteHandler(ID, Name)}/>}
                     </li>
                 </ul>
             </div>

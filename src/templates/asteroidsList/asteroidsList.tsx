@@ -12,13 +12,14 @@ import config from '../../config/config.json'
 import arraySort from 'array-sort';
 import FavouriteDataTable from '../../organisms/tableFavouriteData/tableFavouriteData'
 import FavouriteTableHeadings from '../../organisms/tableFavouriteHeading/tableHeadings'
-
+let checkClick = true;
 export default () => {
     const {user, setUser, setId, setLoggedIn, setLoader, favouriteIds, favouriteAsteroids, setFavouriteIds, setFavouriteAsteroids}:any = useContext(GlobalContext);
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
     const [asteriods, setAsteriods] = useState<any>(null);
     const [asteroidId, setAsteroidId] = useState("");
+    const [asteroidIdToShow, setAsteroidIdToShow] = useState("");
     const [diameterUnit, setDiameterUnit] = useState("km");
     const [velocityUnit, setVelocityUnit] = useState("kmSec");
     const lastTextHandler = () => {
@@ -96,6 +97,7 @@ export default () => {
         if (searchStartDate && searchEndDate) {
             setLoader(true);
             setAsteroidId("");
+            setAsteroidIdToShow("");
             axios.get(config.API_URL + `feed?start_date=${searchStartDate.getFullYear() + '-' + ("0" + (searchStartDate.getMonth() + 1)).slice(-2) + '-' + ("0" + searchStartDate.getDate()).slice(-2)}&end_date=${searchEndDate.getFullYear() + '-' + ("0" + (searchEndDate.getMonth() + 1)).slice(-2) + '-' + ("0" + searchEndDate.getDate()).slice(-2)}&api_key=${config.API_KEY}`).then(res => {
                 let dates = Object.keys(res.data.near_earth_objects);
                 let allAsteriods: any = [];
@@ -107,11 +109,13 @@ export default () => {
                         });
                     })
                 });
-                let sortedAsteroids = arraySort(allAsteriods, 'closeApproachData');
+                let sortedAsteroids = arraySort([...allAsteriods], 'closeApproachData');
                 if (sortedAsteroids.length > 10) {
-                    setAsteriods(sortedAsteroids.slice(0, 10));
+                    setAsteriods(null);
+                    setAsteriods([...sortedAsteroids.slice(0, 10)]);
                 } else {
-                    setAsteriods(sortedAsteroids);
+                    setAsteriods(null);
+                    setAsteriods([...sortedAsteroids]);
                 }
                 setLoader(false);
             }).catch(err => {
@@ -132,6 +136,7 @@ export default () => {
     };
 
     const favouriteHandler = (id, name) => {
+        checkClick = false;
         if (!!favouriteIds.find(sin => sin === id)) {
             setFavouriteAsteroids([...favouriteAsteroids.filter(sin => sin.id !== id)]);
             setFavouriteIds([...favouriteIds.filter(sin => sin !== id)]);
@@ -155,29 +160,36 @@ export default () => {
 
     const searchById = (event: any) => {
         event.preventDefault();
-        setStartDate(null);
-        setEndDate(null);
-        setLoader(true);
-        axios.get(config.API_URL + `neo/${asteroidId}?api_key=${config.API_KEY}`).then(res => {
-            let allAsteriods: any = [];
-            res.data.close_approach_data.forEach((record) => {
-                let close_approach_data: any = [record];
-                allAsteriods.push({
-                    id: res.data.id,
-                    name: res.data.name,
-                    absolute_magnitude_h: res.data.absolute_magnitude_h,
-                    estimated_diameter: res.data.estimated_diameter,
-                    close_approach_data
+        getAsteroidRecord(asteroidId);
+    };
+    const getAsteroidRecord = (asteroidId) => {
+        if (checkClick) {
+            setStartDate(null);
+            setEndDate(null);
+            setLoader(true);
+            setAsteroidIdToShow(asteroidId);
+            axios.get(config.API_URL + `neo/${asteroidId}?api_key=${config.API_KEY}`).then(res => {
+                let allAsteriods: any = [];
+                res.data.close_approach_data.forEach((record) => {
+                    let close_approach_data: any = [record];
+                    allAsteriods.push({
+                        id: res.data.id,
+                        name: res.data.name,
+                        absolute_magnitude_h: res.data.absolute_magnitude_h,
+                        estimated_diameter: res.data.estimated_diameter,
+                        close_approach_data
+                    });
                 });
-            });
-            let sortedAsteroids = arraySort(allAsteriods, 'closeApproachData');
-            setAsteriods(sortedAsteroids);
-            setLoader(false);
-        }).catch(err => {
-            console.log("err", err);
-            setLoader(false);
-            NotificationManager.error('No Asteroid Found with this Id please Confirm the Id.', 'Alert', 5000);
-        })
+                let sortedAsteroids = arraySort([...allAsteriods], 'closeApproachData');
+                setAsteriods([...sortedAsteroids]);
+                setLoader(false);
+            }).catch(err => {
+                console.log("err", err);
+                setLoader(false);
+                NotificationManager.error('No Asteroid Found with this Id please Confirm the Id.', 'Alert', 5000);
+            })
+        }
+        checkClick = true;
     };
 
     return (
@@ -192,7 +204,7 @@ export default () => {
                 <div className="py-4">
                     <div>
                         <FilterRow placeholder={"1234"} type={"number"}
-                                   mainHeading={asteriods ? "10 Nearest Asteroids as per their closest approach" : "Search Nearest Asteroids"}
+                                   mainHeading={asteriods ? asteroidIdToShow ? `Records of Asteroid Id ${asteroidIdToShow}` : "10 Nearest Asteroids as per their closest approach" : "Search Nearest Asteroids"}
                                    startDateHandler={onStartDateChange} endDateHandler={onEndDateChange}
                                    startDate={startDate} endDate={endDate} asteroidId={asteroidId}
                                    setAsteroidId={setAsteroidId} searchById={searchById}
@@ -213,6 +225,7 @@ export default () => {
                                                                                         Relative_Velocity={velocityHandler(asteroid.close_approach_data[0].relative_velocity)}
                                                                                         favouriteHandler={favouriteHandler}
                                                                                         isFavourite={!!favouriteIds.find(sin => sin === asteroid.id)}
+                                                                                        getAsteroidRecord={getAsteroidRecord}
                         />)}
                     </div>}
                 </div>
@@ -225,8 +238,9 @@ export default () => {
                     {favouriteIds && favouriteIds.length !== 0 && <div className="py-5 ">
                         <FavouriteTableHeadings ID Name Remove_Favourite/>
                         {favouriteAsteroids.map(sin => <FavouriteDataTable key={sin.id} ID={sin.id} Name={sin.name}
-                                                                  favouriteHandler={favouriteHandler}
-                                                                  isFavourite={true}  
+                                                                           favouriteHandler={favouriteHandler}
+                                                                           isFavourite={true}
+                                                                           getAsteroidRecord={getAsteroidRecord}
                         />)}
                     </div>}
                 </div>
