@@ -177,6 +177,7 @@ export default () => {
                         name: res.data.name,
                         absolute_magnitude_h: res.data.absolute_magnitude_h,
                         estimated_diameter: res.data.estimated_diameter,
+                        is_potentially_hazardous_asteroid: res.data.is_potentially_hazardous_asteroid,
                         close_approach_data
                     });
                 });
