@@ -12,10 +12,11 @@ import config from '../../config/config.json'
 import arraySort from 'array-sort';
 
 export default () => {
-    const {user, setUser, setId, setLoggedIn, setLoader}:any = useContext(GlobalContext);
+    const {user, setUser, setId, setLoggedIn, setLoader, favouriteIds, favouriteAsteroids, setFavouriteIds, setFavouriteAsteroids}:any = useContext(GlobalContext);
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
     const [asteriods, setAsteriods] = useState<any>(null);
+    const [asteroidId, setAsteroidId] = useState("");
     const [diameterUnit, setDiameterUnit] = useState("km");
     const [velocityUnit, setVelocityUnit] = useState("kmSec");
     const lastTextHandler = () => {
@@ -52,30 +53,38 @@ export default () => {
         }
     };
     const onStartDateChange = (date: Date) => {
-        let standardEndDate = endDate ? new Date(endDate) : null;
+        let standardEndDate: any = endDate ? new Date(endDate) : null;
+        let requiredDateStructure: any = new Date(date);
         if (!date) {
             setStartDate(date);
         }
         else if (standardEndDate && standardEndDate < date) {
             NotificationManager.error('Please ensure that the Start Date is less than or equal to the End Date.', 'Alert', 5000);
             setStartDate(null);
-        } else {
-            let requiredDateStructure = new Date(date);
+        } else if (Math.floor(((standardEndDate - requiredDateStructure) / 86400000)) > 7) {
+            NotificationManager.error('Please ensure that the Dates should between 7 days.', 'Alert', 5000);
+            setStartDate(null);
+        }
+        else {
             setStartDate(requiredDateStructure);
-            searchAsteroidByDate(standardEndDate, requiredDateStructure);
+            searchAsteroidByDate(requiredDateStructure, standardEndDate);
         }
     };
 
     const onEndDateChange = (date: Date) => {
-        let standardStartDate = startDate ? new Date(startDate) : null;
+        let standardStartDate: any = startDate ? new Date(startDate) : null;
+        let requiredDateStructure: any = new Date(date);
         if (!date) {
             setEndDate(date)
         }
         else if (standardStartDate && date < standardStartDate) {
             NotificationManager.error('Please ensure that the End Date is greater than or equal to the Start Date.', 'Alert', 5000);
             setEndDate(null);
+        }
+        else if (Math.floor(((requiredDateStructure - standardStartDate) / 86400000)) > 7) {
+            NotificationManager.error('Please ensure that the Dates should between 7 days.', 'Alert', 5000);
+            setEndDate(null);
         } else {
-            let requiredDateStructure = new Date(date);
             setEndDate(requiredDateStructure);
             searchAsteroidByDate(standardStartDate, requiredDateStructure);
         }
@@ -84,7 +93,8 @@ export default () => {
     const searchAsteroidByDate = (searchStartDate: Date | null, searchEndDate: Date | null) => {
         if (searchStartDate && searchEndDate) {
             setLoader(true);
-            axios.get(config.API_URL + `feed?start_date=${searchStartDate.toISOString().substring(0, 10)}&end_date=${searchEndDate.toISOString().substring(0, 10)}&api_key=${config.API_KEY}`).then(res => {
+            setAsteroidId("");
+            axios.get(config.API_URL + `feed?start_date=${searchStartDate.getFullYear() + '-' + ("0" + (searchStartDate.getMonth() + 1)).slice(-2) + '-' + ("0" + searchStartDate.getDate()).slice(-2)}&end_date=${searchEndDate.getFullYear() + '-' + ("0" + (searchEndDate.getMonth() + 1)).slice(-2) + '-' + ("0" + searchEndDate.getDate()).slice(-2)}&api_key=${config.API_KEY}`).then(res => {
                 let dates = Object.keys(res.data.near_earth_objects);
                 let allAsteriods: any = [];
                 dates.forEach((date) => {
@@ -96,17 +106,76 @@ export default () => {
                     })
                 });
                 let sortedAsteroids = arraySort(allAsteriods, 'closeApproachData');
-                if (sortedAsteroids.length <= 10) {
-                    setAsteriods(sortedAsteroids);
+                if (sortedAsteroids.length > 10) {
+                    setAsteriods(sortedAsteroids.slice(0, 10));
                 } else {
-                    setAsteriods(sortedAsteroids.slice(0, 9));
+                    setAsteriods(sortedAsteroids);
                 }
                 setLoader(false);
             }).catch(err => {
-                console.log(err)
                 setLoader(false);
             })
         }
+    };
+
+    const timeHandler = (date: any) => {
+        date = new Date(date);
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+        let ampm = hours >= 12 ? "pm" : "am";
+        hours = hours % 12;
+        hours = hours ? ("0" + hours).slice(-2) : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        return hours + ":" + minutes + " " + ampm;
+    };
+
+    const favouriteHandler = (id, name) => {
+        if (!!favouriteIds.find(sin => sin === id)) {
+            setFavouriteAsteroids([...favouriteAsteroids.filter(sin => sin.id !== id)]);
+            setFavouriteIds([...favouriteIds.filter(sin => sin !== id)]);
+            firebase.firestore().collection('usersFavourites')
+                .doc(id)
+                .delete()
+        } else {
+            let favouriteAsteroid = {
+                id,
+                name,
+                userId: user.uid
+            };
+            firebase.firestore().collection('usersFavourites')
+                .doc(id)
+                .set(favouriteAsteroid).then(() => {
+            })
+                .catch(() => {
+                })
+        }
+    };
+
+    const searchById = (event: any) => {
+        event.preventDefault();
+        setStartDate(null);
+        setEndDate(null);
+        setLoader(true);
+        axios.get(config.API_URL + `neo/${asteroidId}?api_key=${config.API_KEY}`).then(res => {
+            let allAsteriods: any = [];
+            res.data.close_approach_data.forEach((record) => {
+                let close_approach_data: any = [record];
+                allAsteriods.push({
+                    id: res.data.id,
+                    name: res.data.name,
+                    absolute_magnitude_h: res.data.absolute_magnitude_h,
+                    estimated_diameter: res.data.estimated_diameter,
+                    close_approach_data
+                });
+            });
+            let sortedAsteroids = arraySort(allAsteriods, 'closeApproachData');
+            setAsteriods(sortedAsteroids);
+            setLoader(false);
+        }).catch(err => {
+            console.log("err", err);
+            setLoader(false);
+            NotificationManager.error('No Asteroid Found with this Id please Confirm the Id.', 'Alert', 5000);
+        })
     };
 
     return (
@@ -123,32 +192,41 @@ export default () => {
                         <FilterRow placeholder={"1234"} type={"number"}
                                    mainHeading={asteriods ? "10 Nearest Asteroids as per their closest approach" : "Search Nearest Asteroids"}
                                    startDateHandler={onStartDateChange} endDateHandler={onEndDateChange}
-                                   startDate={startDate} endDate={endDate}/>
+                                   startDate={startDate} endDate={endDate} asteroidId={asteroidId}
+                                   setAsteroidId={setAsteroidId} searchById={searchById}
+                        />
                     </div>
                     {asteriods && <div className="py-5">
                         <TableHeader ID Name Date Time Ab_Magnitutde Min_Max_Est_Diameter Relative_Velocity Hazard
                                      Add_Favourite setVelocityUnit={setVelocityUnit} setDiameterUnit={setDiameterUnit}
                         />
                         {asteriods.length !== 0 && asteriods.map(asteroid => <TableData ID={asteroid.id}
+                                                                                        key={asteroid.id}
                                                                                         Name={asteroid.name}
                                                                                         Date={asteroid.close_approach_data[0].close_approach_date}
-                                                                                        Time={asteroid.close_approach_data[0].close_approach_date_full.slice(asteroid.close_approach_data[0].close_approach_date_full.length - 6)}
+                                                                                        Time={asteroid.close_approach_data[0].close_approach_date_full ? timeHandler(asteroid.close_approach_data[0].close_approach_date_full) : "N/A"}
                                                                                         Ab_Magnitutde={asteroid.absolute_magnitude_h}
                                                                                         Min_Max_Est_Diamater={diameterHandler(asteroid.estimated_diameter)}
                                                                                         Hazard={asteroid.is_potentially_hazardous_asteroid + ""}
                                                                                         Relative_Velocity={velocityHandler(asteroid.close_approach_data[0].relative_velocity)}
+                                                                                        favouriteHandler={favouriteHandler}
+                                                                                        isFavourite={!!favouriteIds.find(sin => sin === asteroid.id)}
                         />)}
                     </div>}
                 </div>
                 {/* Favourite asternoids */}
                 <div className="py-4">
-                    <div>
-                        <ListHeading mainHeading={"Favourite Asteroids"}/>
+                    <div className="flex justify-center">
+                        <ListHeading
+                            mainHeading={favouriteIds && favouriteIds.length !== 0 ? "Favourite Asteroids" : "No Favourite Asteroids Found Yet"}/>
                     </div>
-                    <div className="py-5">
+                    {favouriteIds && favouriteIds.length !== 0 && <div className="py-5">
                         <TableHeader ID Name Remove_Favourite/>
-                        <TableData ID={"0001"} Name={"215 RC"}/>
-                    </div>
+                        {favouriteAsteroids.map(sin => <TableData key={sin.id} ID={sin.id} Name={sin.name}
+                                                                  favouriteHandler={favouriteHandler}
+                                                                  isFavourite={true}
+                        />)}
+                    </div>}
                 </div>
             </div>
         </div>

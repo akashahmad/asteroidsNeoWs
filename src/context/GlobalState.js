@@ -7,6 +7,8 @@ const initialState = {
     user: null,
     loader: false,
     loggedIn: false,
+    favouriteIds: [],
+    favouriteAsteroids: []
 };
 
 // Create context
@@ -45,11 +47,29 @@ export const GlobalProvider = ({children}) => {
         });
     };
 
+    const setFavouriteIds = (ids) => {
+        dispatch({
+            type: 'SET_FAVOURITE_IDS',
+            payload: ids
+        });
+    };
+
+    const setFavouriteAsteroids = (favourites) => {
+        dispatch({
+            type: 'SET_FAVOURITE_ASTEROIDS',
+            payload: favourites
+        });
+    };
+
     return (<GlobalContext.Provider value={{
         id: state.id,
         user: state.user,
         loader: state.loader,
         loggedIn: state.loggedIn,
+        favouriteIds: state.favouriteIds,
+        favouriteAsteroids: state.favouriteAsteroids,
+        setFavouriteIds,
+        setFavouriteAsteroids,
         setUser,
         setId,
         setLoader,

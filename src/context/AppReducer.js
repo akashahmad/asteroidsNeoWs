@@ -14,6 +14,10 @@ export default (state, action) => {
             return { ...state, loader: action.payload };
         case "SET_LOGGEDIN":
             return { ...state, loggedIn: action.payload };
+        case "SET_FAVOURITE_IDS":
+            return { ...state, favouriteIds: action.payload };
+        case "SET_FAVOURITE_ASTEROIDS":
+            return { ...state, favouriteAsteroids: action.payload };
         default:
             return state;
     }

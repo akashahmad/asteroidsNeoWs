@@ -8,15 +8,24 @@ interface ListFilterInputs {
     type: string;
     mainHeading: string;
     startDateHandler: any;
-    startDate: Date|null;
+    startDate: Date | null;
     endDateHandler: any;
-    endDate: Date|null
+    endDate: Date | null;
+    asteroidId: any;
+    setAsteroidId: any;
+    searchById:any
 }
-export default ({ placeholder, type, mainHeading, startDate, startDateHandler, endDateHandler, endDate }: ListFilterInputs) => {
+export default ({placeholder, type, mainHeading, startDate, startDateHandler, endDateHandler, endDate, asteroidId, setAsteroidId, searchById}: ListFilterInputs) => {
     return (
-        <div className="w-full flex flex-col justify-center items-center md:flex-row lg-flex-row xl-flex-row md:justify-between lg:justify-between xl:justify-between py-5">
-            <ListHeading mainHeading={mainHeading} />
-            <FiltersInput  placeholder={placeholder} type={type} startDateHandler={startDateHandler} endDateHandler={endDateHandler} startDate={startDate} endDate={endDate} />
+        <div
+            className="w-full flex flex-col justify-center items-center md:flex-row lg-flex-row xl-flex-row md:justify-between lg:justify-between xl:justify-between py-5">
+            <ListHeading mainHeading={mainHeading}/>
+            <FiltersInput placeholder={placeholder} type={type} startDateHandler={startDateHandler}
+                          endDateHandler={endDateHandler} startDate={startDate} endDate={endDate}
+                          asteroidId={asteroidId}
+                          setAsteroidId={setAsteroidId}
+                          searchById={searchById}
+            />
         </div>
     );
 }
