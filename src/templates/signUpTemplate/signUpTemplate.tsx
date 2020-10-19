@@ -42,7 +42,7 @@ const SignUpTemplate = (props: any) => {
                     setLoader(false);
                     history.push("/");
                 })
-                    .catch(err => {
+                    .catch(() => {
                         setLoader(true);
                     })
             }).catch(function (error) {

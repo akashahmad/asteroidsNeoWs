@@ -6,7 +6,7 @@ interface FormInputProps {
     placeholder: string;
     required?: boolean;
     type: string;
-    onChange: any;
+    onChange?: any;
     minLength?: number;
     maxLength?: number
 }
@@ -14,7 +14,7 @@ export default ({placeholder, type, onChange, label, required, minLength, maxLen
     return (
         <div>
             <Label label={label}/>
-            <Input placeholder={placeholder} type={type} onChange={(event) => onChange(event)}
+            <Input placeholder={placeholder} type={type} onChange={(event) => onChange?onChange(event):()=>{}}
                    required={required || false} minLength={minLength||2} maxLength={maxLength||200}/>
         </div>
     );

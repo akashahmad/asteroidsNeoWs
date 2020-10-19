@@ -4,12 +4,12 @@ import CheckBox from '../../atoms/checkBox/checkBox'
 interface FormCheckProps {
     label: string;
     type: string;
-    onChange: any;
+    onChange?: any;
 }
 export default ({ type, onChange, label }: FormCheckProps) => {
     return (
         <div className="flex" >
-            <CheckBox type={type} onChange={onChange} />
+            <CheckBox type={type} onChange={onChange?onChange:()=>{}} />
             <Label label={label} />
         </div>
     );
