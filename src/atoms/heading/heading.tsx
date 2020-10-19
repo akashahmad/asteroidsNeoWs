@@ -6,7 +6,7 @@ interface HeadingProps {
 export default ({ heading }: HeadingProps) => {
     return (
         <div className="font-sans text-2xl font-semibold not-italic text-center text-current" >
-            {heading || "Heading"}
+            {heading || ""}
         </div>
     );
 }

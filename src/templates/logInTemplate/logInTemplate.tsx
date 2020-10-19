@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom';
 import Heading from '../../atoms/heading/heading'
 import Space from '../../atoms/space/space'
 import FormRow from '../../organisms/formRow/formRow'
@@ -8,9 +9,10 @@ import FormInput from '../../molecules/formInput/formInput'
 import FormCheckBox from '../../molecules/formCheckBox/formCheckBox'
 import Button from '../../atoms/button/button'
 
+
 export default () => {
-    const onChange = (value:string | number) => {
-        
+    const onChange = (value: string | number) => {
+
     }
 
     return (
@@ -18,35 +20,36 @@ export default () => {
             <form>
                 <Space />
                 <div className="flex justify-center ">
-                    <Heading heading={"Wellcome Back!"} />
+                    <Heading heading={"Wellcome Back!"}/>
                 </div>
                 <Space />
                 <FormRow>
                     <FormCol>
-                        <FormInput placeholder={"johndoe"} type={"text"} onChange={onChange} label={"Username"} />
+                        <FormInput placeholder={"johndoe@email.com"} type={"email"} onChange={onChange} label={"Email"}/>
                     </FormCol>
-
                 </FormRow>
                 <FormRow>
                     <FormCol>
-                        <FormInput placeholder={"******"} type={"password"} onChange={onChange} label={"Password"} />
+                        <FormInput placeholder={"******"} type={"password"} onChange={onChange} label={"Password"}/>
                     </FormCol>
                 </FormRow>
 
                 <FormRow>
                     <FormCol>
-                        <FormCheckBox type={"checkbox"} onChange={onChange} label={"Remember Me"} />
+                        <FormCheckBox type={"checkbox"} onChange={onChange} label={"Remember Me"}/>
                     </FormCol>
                 </FormRow>
 
                 <Space />
                 <FormRow>
-                    <Button buttonText={"Login"} />
+                    <Button buttonText={"Login"}/>
                 </FormRow>
-
-                <Space />
                 <FormRow>
-                    <p className="text-color-orange cursor-pointer font-sans text-base font-semibold not-italic text-center">Forgot Password?</p>
+                    <Link to="/sign-up">
+                        <p className="text-color-orange cursor-pointer font-sans text-base font-semibold not-italic text-center">
+                            Don't have an account yet?
+                        </p>
+                    </Link>
                 </FormRow>
                 <Space />
             </form>
