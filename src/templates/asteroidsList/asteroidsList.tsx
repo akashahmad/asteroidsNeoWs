@@ -10,6 +10,8 @@ import {GlobalContext} from '../../context/GlobalState';
 import firebase from "../../config/firebase";
 import config from '../../config/config.json'
 import arraySort from 'array-sort';
+import FavouriteDataTable from '../../organisms/tableFavouriteData/tableFavouriteData'
+import FavouriteTableHeadings from '../../organisms/tableFavouriteHeading/tableHeadings'
 
 export default () => {
     const {user, setUser, setId, setLoggedIn, setLoader, favouriteIds, favouriteAsteroids, setFavouriteIds, setFavouriteAsteroids}:any = useContext(GlobalContext);
@@ -221,8 +223,8 @@ export default () => {
                             mainHeading={favouriteIds && favouriteIds.length !== 0 ? "Favourite Asteroids" : "No Favourite Asteroids Found Yet"}/>
                     </div>
                     {favouriteIds && favouriteIds.length !== 0 && <div className="py-5 ">
-                        <TableHeader ID Name Remove_Favourite/>
-                        {favouriteAsteroids.map(sin => <TableData key={sin.id} ID={sin.id} Name={sin.name}
+                        <FavouriteTableHeadings ID Name Remove_Favourite/>
+                        {favouriteAsteroids.map(sin => <FavouriteDataTable key={sin.id} ID={sin.id} Name={sin.name}
                                                                   favouriteHandler={favouriteHandler}
                                                                   isFavourite={true}  
                         />)}
