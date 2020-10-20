@@ -7,6 +7,30 @@
     background-position: center;
     background-repeat: no-repeat;
 }
+.bg_heart_black_image{
+    background-image: url("../images/heart-outline.png");
+    background-size: contain;
+    height: 20px;
+    width: 22px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.bg_tick_image{
+    background-image: url("../images/checked.png");
+    background-size: contain;
+    height: 25px;
+    width: 22px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.bg_Cross_image{
+    background-image: url("../images/close.png");
+    background-size: contain;
+    height: 20px;
+    width: 22px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
 .react-date-picker__wrapper {
     border-radius: 4px!important;
     border: thin solid #e2e8f0!important;
@@ -43,4 +67,10 @@
 .loader{
     width: 100px;
     height: 100px
+}
+.w-90{
+    width: 90px;
+}
+.h-30{
+    height: 30px;
 }

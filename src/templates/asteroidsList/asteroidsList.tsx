@@ -196,7 +196,7 @@ export default () => {
                                    setAsteroidId={setAsteroidId} searchById={searchById}
                         />
                     </div>
-                    {asteriods && <div className="py-5">
+                    {asteriods && <div className="py-5 ">
                         <TableHeader ID Name Date Time Ab_Magnitutde Min_Max_Est_Diameter Relative_Velocity Hazard
                                      Add_Favourite setVelocityUnit={setVelocityUnit} setDiameterUnit={setDiameterUnit}
                         />
@@ -220,11 +220,11 @@ export default () => {
                         <ListHeading
                             mainHeading={favouriteIds && favouriteIds.length !== 0 ? "Favourite Asteroids" : "No Favourite Asteroids Found Yet"}/>
                     </div>
-                    {favouriteIds && favouriteIds.length !== 0 && <div className="py-5">
+                    {favouriteIds && favouriteIds.length !== 0 && <div className="py-5 ">
                         <TableHeader ID Name Remove_Favourite/>
                         {favouriteAsteroids.map(sin => <TableData key={sin.id} ID={sin.id} Name={sin.name}
                                                                   favouriteHandler={favouriteHandler}
-                                                                  isFavourite={true}
+                                                                  isFavourite={true}  
                         />)}
                     </div>}
                 </div>
