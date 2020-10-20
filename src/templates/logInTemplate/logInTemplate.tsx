@@ -43,7 +43,7 @@ const LoginTemplate = (props: any) => {
             }}>
                 <Space />
                 <div className="flex justify-center ">
-                    <Heading heading={"Wellcome Back!"}/>
+                    <Heading heading={"Welcome Back!"}/>
                 </div>
                 <Space />
                 <FormRow>
