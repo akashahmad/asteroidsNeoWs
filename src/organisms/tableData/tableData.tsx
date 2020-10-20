@@ -29,8 +29,7 @@ export default ({ID, Name, Date, Time, Ab_Magnitutde, Min_Max_Est_Diamater, Haza
                     {Min_Max_Est_Diamater &&
                     <li className="w-2/12 px-2"><TableData tableData={Min_Max_Est_Diamater}/></li>}
                     {Relative_Velocity && <li className="w-2/12 px-3"><TableData tableData={Relative_Velocity}/></li>}
-                    {Hazard && <li className="w-1/12 px-1 flex justify-center">{Hazard === "true" ?
-                        <span className="bg_tick_image"/> : "No"}</li>}
+                    {Hazard && <li className="w-1/12 px-1 flex justify-center">{Hazard === "true" ? "Yes" : "No"}</li>}
                     <li className="w-2/12 px-1 flex justify-center cursor-pointer relative z-0">
                         {isFavourite ? <span className="bg_heart_black_image relative z-100"
                                              onClick={() => favouriteHandler(ID, Name)}/> :
